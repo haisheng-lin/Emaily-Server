@@ -7,15 +7,17 @@ module.exports = (app) => {
       scope: ['profile', 'email'], // specify what information the app want to access to user
   }));
 
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+    res.redirect('/surveys');
+  });
 
   app.get('/api/logout', (req, res) => {
     req.logout(); // take the cookie and kill it by passport
-    res.send(req.user);
+    res.redirect('/');
   });
 
   app.get('/api/current_user', (req, res) => {
-    res.send(req.session);
-    // res.send(req.user);
+    // res.send(req.session);
+    res.send(req.user);
   });
 };
