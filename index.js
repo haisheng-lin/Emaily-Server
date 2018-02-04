@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 require('./models/User');
+require('./models/Survey');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURL);
@@ -27,6 +28,7 @@ app.use(passport.session());
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // 这个必须放在最后，因为如果前面所有路由都不匹配，才会来这里执行
 if(process.env.NODE_ENV === 'production') {

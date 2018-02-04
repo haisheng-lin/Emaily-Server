@@ -115,3 +115,23 @@ if(process.env.NODE_ENV === 'production') {
   });
 }
 ```
+
+### 2018-02-04
+
+**issue:**
+
+当被调查者在邮件里点击 yes/no 时，我们如何知道是哪个用户点击的？
+
+**solution:** 
+
+使用 SendGrid，SendGrid 对邮件里每个链接会先进行重定向到自己的服务器，然后再重定向到真正我们指定的链接，而且 SendGrid 在重定向到自己服务器时，链接会包含一个 token,这个 token 可以指向那个收到邮件的用户！
+
+1. We tell SendGrid to send email
+2. SendGrid scans the email, replaces every link with their special one
+3. user clicks the link
+4. SendGrid knows who clicked it
+5. SendGrid can (1) user sent to destination; (2) send message to our server telling us about the click
+
+而且，一旦 SendGrid 告诉我们有用户点击了链接，那么就会用到 webhook。
+
+webhook is an outside API that facilitate the process that some event just occured. So that's why we need a route called "/api/surverys/webhooks" which tells us: hey, someone clicks the link you provided and you can response with some actions.
