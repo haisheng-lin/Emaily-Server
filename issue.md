@@ -84,3 +84,34 @@ In production, react app is deployed on Heroku on Express Server. Because when w
 ```
 <Route exact={ true } path="/" component={ Landing } />
 ```
+
+### 2018-02-03
+
+**issue:**
+
+由于 API_KEY 都在存储在服务器，前端如何拿到后端的 API_KEY 呢？而且后端的 NodeJS 用的是 CommonJS modules，所以可以在输出之前加上逻辑判断，但是前端用的是 ES2015 以上的版本，我们不可以在 import 东西之前加上逻辑判断。
+
+**solution:** 
+
+create-react-app 可以帮助我们配置环境变量，这是链接：[传送门](https://github.com/haisheng-lin/Emaily-Server/tree/master/client#adding-custom-environment-variables)
+
+**issue:**
+
+当部署 app 到 Heroku 时，如何使服务器知道哪些路由是前端的，哪些路由是后端的？
+
+**solution:** 
+
+在 Express 的 index.js 最后加上：
+```
+if(process.env.NODE_ENV === 'production') {
+  // Express will serve up production assets
+  // like main.js and main.css file
+  app.use(express.static('client/build'));
+
+  // Express will serve up index.html file if it cannot recognize the route
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+```
