@@ -173,3 +173,28 @@ export default reduxForm({
 ```
 
 意思是当 React unmount SurveyNew 这个 component 时（因为我们按 cancel 会重定向到 Dashboard），也把 surveyForm 里面的都清空，其实这是 React default behavior。
+
+**issue:**
+
+如何在做了 action 后重定向？
+
+**solution:** 
+
+使用 react-router-dom 里面的 withRouter，它会给 props 提供 history 对象，把这个对象传进对应的 action 里面，然后写入：
+
+```
+history.push('/surveys'); // 重定向
+```
+
+**issue:**
+
+在 development mode 里，如何使 SendGrid callback URL 指向 localhost？
+
+**solution:**
+
+使用 localtunnel：给它配置一些 subdomain（必须确保唯一），由于 localtunnel 经常崩掉，所以又要借用 forever，在 sendgrid_webhook.js 里面的代码自己看看，还有在 package.json 里面：
+
+```
+"dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webhook\"",
+"webhook": "forever sendgrid_webhook.js"
+```

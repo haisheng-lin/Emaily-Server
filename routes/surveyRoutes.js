@@ -13,8 +13,12 @@ module.exports = async (app) => {
     res.send('Thanks for voting!');
   });
 
+  app.post('/api/surveys/webhooks', (req, res) => {
+    console.log('req.body in webhook route is: ', req.body);
+    res.send({});
+  });
+
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
-    console.log('back-end received your req!');
     const { title, subject, body, recipients } = req.body;
     const survey = new Survey({
       title: title,
