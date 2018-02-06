@@ -135,3 +135,41 @@ if(process.env.NODE_ENV === 'production') {
 而且，一旦 SendGrid 告诉我们有用户点击了链接，那么就会用到 webhook。
 
 webhook is an outside API that facilitate the process that some event just occured. So that's why we need a route called "/api/surverys/webhooks" which tells us: hey, someone clicks the link you provided and you can response with some actions.
+
+**issue:**
+
+如何测试 SendGrid 正确地发邮件而不需要通过前端 React？
+
+**solution:** 
+
+在 React index.js 写上 windows.axios = require('axios')，那么就可以在浏览器调用 axios.post('/api/surveys', survey)了
+
+### 2018-02-05
+
+**issue:**
+
+SurveyForm 的表单数据不希望在 render SurveyFormReview 后被清除，如何做？
+
+**solution:** 
+
+在 SurveyForm 的 reduxForm 配置里：
+
+```
+destroyOnUnmount: false // do not destroy the form so that when we go back, the form value keeps alive
+```
+
+**issue:**
+
+如果用户在 SurveyForm 里按取消而我们希望再次 create surve y时表格是清空的，如何做？
+
+**solution:** 
+
+在 SurveyNew 里：
+
+```
+export default reduxForm({
+  form: 'surveyForm'
+})(SurveyNew);
+```
+
+意思是当 React unmount SurveyNew 这个 component 时（因为我们按 cancel 会重定向到 Dashboard），也把 surveyForm 里面的都清空，其实这是 React default behavior。

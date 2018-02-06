@@ -8,7 +8,13 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = require('../models/Survey');
 
 module.exports = async (app) => {
-  app.post('/api/surveys', requireLogin, requireCredits,  (req, res) => {
+
+  app.get('/api/surveys/thanks', (req, res) => {
+    res.send('Thanks for voting!');
+  });
+
+  app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
+    console.log('back-end received your req!');
     const { title, subject, body, recipients } = req.body;
     const survey = new Survey({
       title: title,
@@ -21,6 +27,16 @@ module.exports = async (app) => {
 
     // great place to send email
     const mailer = new Mailer(survey, surveyTemplate(survey));
-    mailer.send();
+
+    try {
+      await mailer.send();
+      // only save the survey after the email successfully sent
+      await survey.save();
+      req.user.credits -= 1;
+      const user = await req.user.save();
+      res.send(user);
+    } catch(err) {
+      res.status(422).send(err);
+    }
   });
 };

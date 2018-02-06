@@ -6,8 +6,8 @@ import * as actions from '../actions';
 
 import Header from './Header';
 import Landing from './Landing';
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
+import Dashboard from './Dashboard';
+import SurveyNew from './surveys/SurveyNew';
 
 class App extends Component {
 
@@ -17,18 +17,17 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Route exact path="/" component={ Landing } />
-            <Route exact path="/surveys" component={ Dashboard } />
-            <Route path="/surveys/new" component={ SurveyNew } />
-          </div>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Header />
+          <Route exact path="/" component={ Landing } />
+          <Route exact path="/surveys" component={ Dashboard } />
+          <Route path="/surveys/new" component={ SurveyNew } />
+        </div>
+      </BrowserRouter>
     );
   }
 };
 
+// connect 方法可以将连接 App 以及 actions，所以 App 可以通过 this.props 调用 actions
 export default connect(null, actions)(App);

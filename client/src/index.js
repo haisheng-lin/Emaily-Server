@@ -12,6 +12,10 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App';
 import reducers from './reducers'; // 不知道为什么这么写，而不是输出 combineReducers
 
+// development mode testing only!!!
+import axios from 'axios';
+window.axios = axios;
+
 // dummy store, wiil replace it shortly
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
