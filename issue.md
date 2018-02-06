@@ -198,3 +198,26 @@ history.push('/surveys'); // 重定向
 "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webhook\"",
 "webhook": "forever sendgrid_webhook.js"
 ```
+
+### 2018-02-06
+
+**issue:**
+
+由于 SendGrid 返回的数据中，虽然提供了 email, event等，但不提供用户具体点击了什么按钮，我们如何得到该信息？
+
+**solution:**
+
+在 SurveyTemplate 里面修改每个链接的地址，变成 `/api/surveys/:surveyId/yes` 之类的。
+
+**issue:**
+
+但是，假如开发者因为要开发其他项目，添加了除了邮件点击之外的功能，那么我们的服务器就会收到其他我们并不关心的数据；而且，用户也可能对同一个 survey 点击了两次以上投票，实际上我们只希望用户对特定的 survey 最多投一次票。我们要怎么做？
+
+**solution:**
+
+逻辑：
+1. 首先，我们需要清理数据，把 event != 'click'，url != '/api/surveys/:surveyId/:anwser' 这些数据清理掉
+2. 清理掉重复的数据（用户对同一个 survey 投两次票以上）
+
+做法：
+我们需要 lodash, path-parser 这两个模块，
